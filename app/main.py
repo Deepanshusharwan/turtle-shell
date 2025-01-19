@@ -1,7 +1,9 @@
+import os.path
 import sys
+from os import path
 from os.path import split
 
-
+built_in_commands = ["exit", "echo","type"]
 def main():
     while True:
         sys.stdout.write("$ ")
@@ -14,29 +16,41 @@ def main():
             try:
                 sys.exit(int(user_command[1]))
             except ValueError:
-                print("the exit code must be an integer")
+                sys.stdout.write("the exit code must be an integer\n")
 
         elif user_command[0] == "exit" and len(user_command) != 2:
-            print(f"{user_command[0]} requires one argument, exit code.")
+            sys.stdout.write(f"{user_command[0]} requires one argument, exit code.\n")
 
 
         #for echo command
         elif user_command[0] == "echo":
-            print(" ".join(user_command[1:]))
+            sys.stdout.write(" ".join(user_command[1:]))
+            sys.stdout.write("\n")
+
 
 
         #for type command
         elif user_command[0] == "type":
+            command = user_command[1]
+            paths = PATH.split(":")
+
+            for path in paths:
+                if os.path.isfile(path):
+                    sys.stdout.write(path)
+                    sys.stdout.write("\n")
+                    
+
             if len(user_command) != 2:
-                print("type requires one argument, command")
-            elif user_command[1] in ["exit", "echo","type"]:
-                print(f"{user_command[1]} is a shell builtin")
+                sys.stdout.write("type requires one argument, command\n")
+            elif command in built_in_commands:
+                sys.stdout.write(f"{command} is a shell builtin\n")
             else:
-                print(f"{user_command[1]}: not found")
+                sys.stdout.write(f"{command}: not found\n")
 
 
         else:
-            print(f"{user_input}: command not found")
+            sys.stdout.write(f"{user_command[0]}: command not found\n")
+            sys.stdout.flush()
 
 '''
 def exit(user_command: list):
