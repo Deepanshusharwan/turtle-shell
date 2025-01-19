@@ -31,6 +31,8 @@ def main():
                 print("type requires one argument, command")
             elif user_command[1] in ["exit", "echo","type"]:
                 print(f"{user_command[1]} is a shell builtin")
+            else:
+                print(f"{user_input}: command not found")
 
 
         else:
