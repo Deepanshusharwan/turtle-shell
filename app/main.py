@@ -12,7 +12,7 @@ def main():
         user_input = input()
         user_command = user_input.split()
 
-
+#for exit command
         if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
             try:
                 sys.exit(int(user_command[1]))
@@ -23,14 +23,14 @@ def main():
             sys.stdout.write(f"{user_command[0]} requires one argument, exit code.\n")
 
 
-        #for echo command
+#for echo command
         elif user_command[0] == "echo":
             sys.stdout.write(" ".join(user_command[1:]))
             sys.stdout.write("\n")
 
 
 
-        #for type command
+#for type command
         elif user_command[0] == "type":
 
             command = user_command[1]
@@ -38,11 +38,11 @@ def main():
 
             for path in paths:
                 if os.path.isfile(f"{path}/{command}"):
-                    sys.stdout.write(f"{path}/{command}")
-                    sys.stdout.write("\n")
-                    break
+                    command_path = f"{path}/{command}"
 
-            if len(user_command) != 2:
+            if command_path:
+                sys.stdout.write(command_path)
+            elif len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
             elif command in built_in_commands:
                 sys.stdout.write(f"{command} is a shell builtin\n")
@@ -63,6 +63,6 @@ def exit(user_command: list):
         print(f"{user_command[0]} requires one argument, exit code.")'''
 
 
-
+        
 if __name__ == "__main__":
     main()
