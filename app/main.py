@@ -32,14 +32,15 @@ def main():
 
         #for type command
         elif user_command[0] == "type":
+
             command = user_command[1]
             paths = PATH.split(":")
 
             for path in paths:
-                if os.path.isfile(path):
-                    sys.stdout.write(path)
+                if os.path.isfile(f"{path}/{command}"):
+                    sys.stdout.write(f"{path}/{command})
                     sys.stdout.write("\n")
-
+                    break
 
             if len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
