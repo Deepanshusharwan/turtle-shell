@@ -38,7 +38,7 @@ def main():
 
             for path in paths:
                 if os.path.isfile(f"{path}/{command}"):
-                    sys.stdout.write(f"{path}/{command})
+                    sys.stdout.write(f"{path}/{command}")
                     sys.stdout.write("\n")
                     break
 
