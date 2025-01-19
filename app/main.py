@@ -46,7 +46,7 @@ def main():
                 sys.stdout.write("type requires one argument, command\n")
             elif command in built_in_commands:
                 sys.stdout.write(f"{command} is a shell builtin\n")
-            if command_path:
+            elif command_path:
                 sys.stdout.write(f"{command} is {command_path}")
                 sys.stdout.write("\n")
             else:
