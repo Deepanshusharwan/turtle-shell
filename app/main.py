@@ -37,18 +37,18 @@ def main():
             command = user_command[1]
             paths = PATH.split(":")
             command_path = None
-            
+
             for path in paths:
                 if os.path.isfile(f"{path}/{command}"):
                     command_path = f"{path}/{command}"
 
-            if command_path:
-                sys.stdout.write(f"{command} is {command_path}")
-                sys.stdout.write("\n")
-            elif len(user_command) != 2:
+            if len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
             elif command in built_in_commands:
                 sys.stdout.write(f"{command} is a shell builtin\n")
+            if command_path:
+                sys.stdout.write(f"{command} is {command_path}")
+                sys.stdout.write("\n")
             else:
                 sys.stdout.write(f"{command}: not found\n")
 
