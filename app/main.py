@@ -29,7 +29,7 @@ def main():
         elif user_command[0] == "type":
             if len(user_command) != 2:
                 print("type requires one argument, command")
-            elif user_command[1] in ["exit", "echo"]:
+            elif user_command[1] in ["exit", "echo","type"]:
                 print(f"{user_command[1]} is a shell builtin")
 
 
