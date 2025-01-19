@@ -42,6 +42,7 @@ def main():
 
             if command_path:
                 sys.stdout.write(command_path)
+                sys.stdout.write("\n")
             elif len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
             elif command in built_in_commands:
@@ -63,6 +64,6 @@ def exit(user_command: list):
         print(f"{user_command[0]} requires one argument, exit code.")'''
 
 
-        
+
 if __name__ == "__main__":
     main()
