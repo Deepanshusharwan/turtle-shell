@@ -32,7 +32,7 @@ def main():
             elif user_command[1] in ["exit", "echo","type"]:
                 print(f"{user_command[1]} is a shell builtin")
             else:
-                print(f"{user_command[1]}: command not found")
+                print(f"{user_command[1]}: not found")
 
 
         else:
