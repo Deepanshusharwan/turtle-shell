@@ -4,6 +4,8 @@ from os.path import split
 
 built_in_commands = ["exit", "echo","type"]
 PATH = os.environ["PATH"]
+
+
 def main():
     while True:
         sys.stdout.write("$ ")
@@ -34,7 +36,8 @@ def main():
 
             command = user_command[1]
             paths = PATH.split(":")
-
+            command_path = None
+            
             for path in paths:
                 if os.path.isfile(f"{path}/{command}"):
                     command_path = f"{path}/{command}"
