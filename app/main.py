@@ -21,8 +21,16 @@ def main():
 
 
         #for echo command
-        if user_command[0] == "echo":
+        elif user_command[0] == "echo":
             print(" ".join(user_command[1:]))
+
+
+        #for type command
+        elif user_command[0] == "type":
+            if len(user_command) != 2:
+                print("type requires one argument, command")
+            elif user_command[1] in ["exit", "echo"]:
+                print(f"{user_command[1]} is a shell builtin")
 
 
         else:
