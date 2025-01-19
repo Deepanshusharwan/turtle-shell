@@ -1,6 +1,5 @@
 import os
 import sys
-from os import path
 from os.path import split
 
 built_in_commands = ["exit", "echo","type"]
@@ -11,6 +10,7 @@ def main():
         # Wait for user input
         user_input = input()
         user_command = user_input.split()
+
 
 #for exit command
         if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
@@ -29,7 +29,6 @@ def main():
             sys.stdout.write("\n")
 
 
-
 #for type command
         elif user_command[0] == "type":
 
@@ -41,7 +40,7 @@ def main():
                     command_path = f"{path}/{command}"
 
             if command_path:
-                sys.stdout.write(command_path)
+                sys.stdout.write(f"{command} is {command_path}")
                 sys.stdout.write("\n")
             elif len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
