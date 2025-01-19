@@ -1,4 +1,4 @@
-import os.path
+import os
 import sys
 from os import path
 from os.path import split
@@ -38,7 +38,7 @@ def main():
                 if os.path.isfile(path):
                     sys.stdout.write(path)
                     sys.stdout.write("\n")
-                    
+
 
             if len(user_command) != 2:
                 sys.stdout.write("type requires one argument, command\n")
