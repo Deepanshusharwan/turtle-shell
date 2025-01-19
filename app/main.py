@@ -4,6 +4,7 @@ from os import path
 from os.path import split
 
 built_in_commands = ["exit", "echo","type"]
+PATH = os.environ["PATH"]
 def main():
     while True:
         sys.stdout.write("$ ")
