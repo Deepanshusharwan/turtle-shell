@@ -1,9 +1,11 @@
 import os
 import sys
-from os.path import split
+from os.path import abspath
 import subprocess
+import platform
 
-built_in_commands = ["exit", "echo","type","pwd"]
+
+built_in_commands = ["exit", "echo","type","pwd","cd"]
 PATH = os.environ["PATH"]
 
 
@@ -56,13 +58,30 @@ def main():
                 else:
                     sys.stdout.write(f"{command}: not found\n")
 
+    #for pwd command
             elif user_command[0] == "pwd":
                 sys.stdout.write(os.getcwd())
                 sys.stdout.write("\n")
 
+    #for executing commands through the shell
             elif executable_file(user_command[0]):
                 subprocess.run(user_command)
                 sys.stdout.flush()
+
+    #for cd command
+            elif user_command[0] == "cd":
+                try:
+                    new_path = user_command[1]
+                    if user_command[1][0] == "~":
+                        if platform.system() == "Linux":
+                            new_path = user_command[1][0].replace("~", os.environ.get("HOME"))
+                        elif platform.system() == "Windows":
+                            new_path = user_command[1][0].replace("~",os.environ.get("USERPROFILE"))
+                    os.chdir(new_path)
+                except IndexError:
+                    sys.stdout.write("cd requires one argument, directory\n")
+                except FileNotFoundError:
+                    sys.stdout.write(f"cd: {user_command[1]}: No such file or directory\n")
 
 
             else:
