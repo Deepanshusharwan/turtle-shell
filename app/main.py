@@ -80,7 +80,6 @@ def main():
                         if user_command[1][0] == "~":
                             new_path = user_command[1][0].replace("~",os.environ.get("HOME"))
 
-
                     os.chdir(new_path)
 
                 except IndexError:
