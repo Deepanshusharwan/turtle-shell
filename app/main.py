@@ -72,11 +72,12 @@ def main():
             elif user_command[0] == "cd":
                 try:
                     new_path = user_command[1]
-                    if user_command[1][0] == "~":
-                        if platform.system() == "Linux":
+                    if platform.system() == "Linux":
+                        if user_command[1][0] == "~":
                             new_path = user_command[1][0].replace("~", os.environ.get("HOME"))
-                        elif platform.system() == "Windows":
-                            new_path = user_command[1][0].replace("~",os.environ.get("USERPROFILE"))
+                    elif platform.system() == "Windows":
+                        if user_command[1][0] == "~":
+                            new_path = user_command[1][0].replace("~", os.environ.get("USERPROFILE"))
                     os.chdir(new_path)
                 except IndexError:
                     sys.stdout.write("cd requires one argument, directory\n")
