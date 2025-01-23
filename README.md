@@ -103,7 +103,7 @@ OUTPUT: Invalid commands output
 * Incorrect arguments for external commands display the error messages present in that command.
 
 # Turtle-shell release
-**Noitce!: the v.0.0.1 works if you run it with a terminal app**
+**Noitce!: the v.0.0.1 works if you run it with a terminal app like kitty, powershell or alacrity.**
 # Code Overview
 **Main Components:**\
 *Built-in Commands:*
