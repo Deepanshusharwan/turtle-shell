@@ -60,7 +60,7 @@ def main():
 
     #for pwd command
             elif user_command[0] == "pwd":
-                sys.stdout.write(os.getcwd())
+                sys.stdout.write(abspath(os.getcwd()))
                 sys.stdout.write("\n")
 
     #for executing commands through the shell
@@ -72,15 +72,30 @@ def main():
             elif user_command[0] == "cd":
                 try:
                     new_path = user_command[1]
-                    if platform.system() == "Linux":
+                    if platform.system() == "Windows":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1][0].replace("~", os.environ.get("HOME"))
-                    elif platform.system() == "Windows":
+                            new_path = user_command[1][0].replace("~",os.environ.get("USERPROFILE"))
+
+                    elif platform.system() == "Linux":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1][0].replace("~", os.environ.get("USERPROFILE"))
+                            new_path = user_command[1][0].replace("~",os.environ.get("HOME"))
+
+
                     os.chdir(new_path)
+
                 except IndexError:
-                    sys.stdout.write("cd requires one argument, directory\n")
+                    if len(user_command) == 1:
+                        if platform.system() == "Windows":
+                            new_path = os.environ.get("USERPROFILE")
+                            os.chdir(new_path)
+
+                        elif platform.system() == "Linux":
+                            new_path = os.environ.get("HOME")
+                            os.chdir(new_path)
+
+                    else:
+                        sys.stdout.write(f"{user_command[0]} requires one argument, directory\n")
+
                 except FileNotFoundError:
                     sys.stdout.write(f"cd: {user_command[1]}: No such file or directory\n")
 
