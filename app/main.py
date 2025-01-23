@@ -1,8 +1,9 @@
 import os
 import sys
 from os.path import split
+import subprocess
 
-built_in_commands = ["exit", "echo","type"]
+built_in_commands = ["exit", "echo","type","pwd"]
 PATH = os.environ["PATH"]
 
 
@@ -55,8 +56,13 @@ def main():
                 else:
                     sys.stdout.write(f"{command}: not found\n")
 
+            elif user_command[0] == "pwd":
+                sys.stdout.write(os.getcwd())
+                sys.stdout.write("\n")
+
             elif executable_file(user_command[0]):
-                os.system(user_command[0])
+                subprocess.run(user_command)
+                sys.stdout.flush()
 
 
             else:
