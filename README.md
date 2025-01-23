@@ -102,6 +102,8 @@ OUTPUT: Invalid commands output
 * Incorrect arguments for built-in commands display helpful error messages.
 * Incorrect arguments for external commands display the error messages present in that command.
 
+# Turtle-shell release
+**Noitce!: the v.0.0.1 works if you run it with a terminal app**
 # Code Overview
 **Main Components:**\
 *Built-in Commands:*
