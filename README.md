@@ -28,7 +28,7 @@ This project implements a basic command-line shell in Python, providing function
 1. Navigate to the project directory in your terminal.
 2. Run the shell using:
    ```bash
-   python3 shell.py
+   python3 app/main.py
 3. The shell will display a prompt ($), waiting for you to enter commands.
 
 ## Commands
