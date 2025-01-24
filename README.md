@@ -1,4 +1,5 @@
-# Turtle-Shell <img title="turtle_logo" alt="turtle-shell" src="/img.png">
+# Turtle-Shell
+<img title="turtle_logo" alt="turtle-shell" src="/img.png">
 This project implements a basic command-line shell in Python, providing functionality for built-in commands, directory navigation, and external executable execution. It is cross-platform, supporting Linux and Windows.
 
 ---
