@@ -17,7 +17,7 @@ def main():
         user_command = user_input.split()
         paths = PATH.split(":")
 
-        if user_input == "":
+        if user_input == "" or user_command == []:
             pass
         else:
     #for exit command
