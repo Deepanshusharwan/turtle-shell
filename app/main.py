@@ -1,13 +1,15 @@
 import os # alot of stuff!
 import sys # for output , exit and other such stuff
-from os.path import abspath # to find the absolute path i.e path from the home directory
+from os.path import abspath # to find the absolute path i.e. path from the home directory
 import subprocess # to run the executable files
 import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 
 
 built_in_commands = ["exit", "echo","type","pwd","cd"]
-PATH = os.environ["PATH"]#makes a list of all the paths of the current enviroment
+PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
+user_input = ""
+user_command = []
 
 
 def main():
@@ -15,9 +17,13 @@ def main():
 
         sys.stdout.write("$ ")
         # Wait for user input
+        global user_input
         user_input = input()
         paths = PATH.split(":")
+        global user_command
         user_command = shlex.split(user_input,posix=True)
+        output = ""
+        error = ""
         user_input_ls = [_ for _ in user_input]
 
 
@@ -49,39 +55,60 @@ def main():
 
     #for echo command
             elif user_command[0] == "echo":
-                sys.stdout.write(" ".join(user_command[1:]))
-                sys.stdout.write("\n")
+                output = " ".join(user_command[1:])
+                redirecting(output,error)
 
 
     #for type command
             elif user_command[0] == "type":
 
-                command = user_command[1]
-                command_path = None
+                if len(user_command) != 1:
+                    command = user_command[1]
+                    command_path = None
 
-                for path in paths:
-                    if os.path.isfile(f"{path}/{command}"):
-                        command_path = f"{path}/{command}"
+                    for path in paths:
+                        if os.path.isfile(f"{path}/{command}"):
+                            command_path = f"{path}/{command}"
 
-                if len(user_command) != 2:
-                    sys.stdout.write("type requires one argument, command\n")
-                elif command in built_in_commands:
-                    sys.stdout.write(f"{command} is a shell builtin\n")
-                elif command_path:
-                    sys.stdout.write(f"{command} is {command_path}")
-                    sys.stdout.write("\n")
-                else:
-                    sys.stdout.write(f"{command}: not found\n")
+                    if len(user_command) != 2:
+                        error = "type requires one argument, command\n"
+                    elif command in built_in_commands:
+                        output = f"{command} is a shell builtin\n"
+                    elif command_path:
+                        output = f"{command} is {command_path}\n"
+                    else:
+                        error = f"{command}: not found\n"
+                    redirecting(output,error)
 
     #for pwd command
             elif user_command[0] == "pwd":
-                sys.stdout.write(abspath(os.getcwd()))
-                sys.stdout.write("\n")
+                output = f"{abspath(os.getcwd())}\n"
+                redirecting(output,error)
 
     #for executing commands through the shell
             elif executable_file(user_command[0]):
-                subprocess.run(user_command)
-                sys.stdout.flush()
+                result = subprocess.run(user_command, capture_output=True, text=True)
+                output = result.stdout
+                error = result.stderr
+
+                if ">" in user_input:
+                    new_user_command = user_command[0:user_command.index(">")]
+                    result = subprocess.run(new_user_command, capture_output=True, text=True)
+                    output = result.stdout
+                    error = result.stderr
+                    redirecting(output,error)
+
+                elif "1>" in user_input:
+                    new_user_command = user_command[0:user_command.index("1>")]
+                    result = subprocess.run(new_user_command, capture_output=True, text=True)
+                    output = result.stdout
+                    redirecting(output,error)
+
+                else:
+                    result = subprocess.run(user_command, capture_output=True, text=True)
+                    sys.stdout.write(result.stdout)
+                    sys.stdout.write(result.stderr)
+
 
     #for cd command
             elif user_command[0] == "cd":
@@ -89,11 +116,11 @@ def main():
                     new_path = user_command[1]
                     if platform.system() == "Windows":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1][0].replace("~",os.environ.get("USERPROFILE"))
+                            new_path = user_command[1].replace("~",os.environ.get("USERPROFILE"))
 
                     elif platform.system() == "Linux":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1][0].replace("~",os.environ.get("HOME"))
+                            new_path = user_command[1].replace("~",os.environ.get("HOME"))
 
 
                     os.chdir(new_path)
@@ -109,7 +136,8 @@ def main():
                             os.chdir(new_path)
 
                     else:
-                        sys.stdout.write(f"{user_command[0]} requires one argument, directory\n")
+                        error = f"{user_command[0]} requires one argument, directory\n"
+                    redirecting(output,error)
 
                 except FileNotFoundError:
                     sys.stdout.write(f"cd: {user_command[1]}: No such file or directory\n")
@@ -133,6 +161,32 @@ def executable_file(command: str):
     for path in paths:
         if os.path.isfile(f"{path}/{command}"):
             return True
+
+
+def redirecting(output,error):
+    if ">" in user_input or "1>" in user_input:
+        if os.path.isfile(user_command[user_command.index(">") + 1]):
+            with open(user_command[user_command.index(">") + 1],"a") as file:
+                if output:
+                    file.write(output)
+                elif error:
+                    file.write(error)
+        else:
+            touch_cmd = ["touch",user_command[user_command.index(">") + 1]]
+            subprocess.run(touch_cmd)
+            with open(user_command[user_command.index(">") + 1],"a") as file:
+                if output:
+                    file.write(output)
+                elif error:
+                    file.write(error)
+
+    elif "2>" in user_input:
+        if os.path.isfile(user_command[user_command.index("2>") + 1]):
+            with open(user_command[user_command.index("2>") + 1],"a") as file:
+                file.write(error)
+
+    else:
+        sys.stdout.write(f"{output}\n")
 
 if __name__ == "__main__":
     main()
