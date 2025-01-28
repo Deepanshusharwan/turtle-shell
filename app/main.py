@@ -55,8 +55,13 @@ def main():
 
     #for echo command
             elif user_command[0] == "echo":
-                output = " ".join(user_command[1:])
-                redirecting(output,error)
+                if not ">" in user_command and not "1>" in user_command and not "2>" in user_command:
+                    output = " ".join(user_command[1:])
+                    output = f"{output}\n"
+                    redirecting(output,error)
+                else:
+                    output = f"{user_command[1]}\n"
+                    redirecting(output,error)
 
 
     #for type command
@@ -82,7 +87,7 @@ def main():
 
     #for pwd command
             elif user_command[0] == "pwd":
-                output = f"{abspath(os.getcwd())}\n"
+                output = f"{abspath(os.getcwd())}"
                 redirecting(output,error)
 
     #for executing commands through the shell
@@ -91,15 +96,16 @@ def main():
                 output = result.stdout
                 error = result.stderr
 
-                if ">" in user_input:
-                    new_user_command = user_command[0:user_command.index(">")]
+                if "1>" in user_input:
+                    new_user_command = user_command[0:user_command.index("1>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
                     redirecting(output,error)
 
-                elif "1>" in user_input:
-                    new_user_command = user_command[0:user_command.index("1>")]
+
+                elif ">" in user_input:
+                    new_user_command = user_command[0:user_command.index(">")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     redirecting(output,error)
@@ -164,7 +170,44 @@ def executable_file(command: str):
 
 
 def redirecting(output,error):
-    if ">" in user_input or "1>" in user_input:
+
+    if "1>" in user_input:
+        if os.path.isfile(user_command[user_command.index("1>") + 1]):
+            with open(user_command[user_command.index("1>") + 1], "a") as file:
+                if output:
+                    file.write(output)
+                elif error:
+                    file.write(error)
+
+
+
+        elif not os.path.isfile(user_command[user_command.index("1>") - 1]) and user_command[0] != "echo":
+            sys.stdout.write(f"{user_command[0]}: {user_command[user_command.index('1>') - 1]}: No such file or directory\n")
+
+            if os.path.isfile(user_command[1]) and not os.path.isfile(user_command[user_command.index("1>")+1 ]):
+                touch_cmd = ["touch", user_command[user_command.index("1>") + 1]]
+                subprocess.run(touch_cmd)
+                with open(user_command[user_command.index("1>") + 1], "a") as file:
+                    if output:
+                        file.write(output)
+                    elif error:
+                        file.write(output)
+
+        else:
+            touch_cmd = ["touch", user_command[user_command.index("1>") + 1]]
+            subprocess.run(touch_cmd)
+            with open(user_command[user_command.index("1>") + 1], "a") as file:
+                if output:
+                    file.write(output)
+                elif error:
+                    file.write(error)
+
+    elif "2>" in user_input:
+        if os.path.isfile(user_command[user_command.index("2>") + 1]):
+            with open(user_command[user_command.index("2>") + 1],"a") as file:
+                file.write(error)
+
+    elif ">" in user_input:
         if os.path.isfile(user_command[user_command.index(">") + 1]):
             with open(user_command[user_command.index(">") + 1],"a") as file:
                 if output:
@@ -179,11 +222,6 @@ def redirecting(output,error):
                     file.write(output)
                 elif error:
                     file.write(error)
-
-    elif "2>" in user_input:
-        if os.path.isfile(user_command[user_command.index("2>") + 1]):
-            with open(user_command[user_command.index("2>") + 1],"a") as file:
-                file.write(error)
 
     else:
         sys.stdout.write(f"{output}\n")
