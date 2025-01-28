@@ -1,23 +1,39 @@
-import os
-import sys
-from os.path import abspath
-import subprocess
-import platform
+import os # alot of stuff!
+import sys # for output , exit and other such stuff
+from os.path import abspath # to find the absolute path i.e path from the home directory
+import subprocess # to run the executable files
+import platform #to check the for the current platform
+import shlex #to handle the quotes in the command line
 
 
 built_in_commands = ["exit", "echo","type","pwd","cd"]
-PATH = os.environ["PATH"]
+PATH = os.environ["PATH"]#makes a list of all the paths of the current enviroment
 
 
 def main():
     while True:
+
         sys.stdout.write("$ ")
         # Wait for user input
         user_input = input()
-        user_command = user_input.split()
         paths = PATH.split(":")
+        user_command = shlex.split(user_input,posix=True)
+        user_input_ls = [_ for _ in user_input]
 
-        if user_input == "" or user_command == []:
+
+# TODO make it so that the program can catch the unterminated quotes
+     #   if user_input_ls.count("'") == 0 and user_input_ls.count('"') == 0: #find a better a way to handle quotes through regex
+      #      user_command = user_input.split()
+
+        #elif user_input_ls.count("'")%2 != 0 or user_input_ls.count('"')%2 != 0:
+         #   sys.stdout("Unterminated single quote\n")
+
+       # elif user_input_ls.count("'")%2 == 0 or user_input_ls.count('"')%2 == 0:
+        #    user_command = shlex.split(user_input,posix=True)
+
+
+
+        if user_input == "":
             pass
         else:
     #for exit command
@@ -78,6 +94,7 @@ def main():
                     elif platform.system() == "Linux":
                         if user_command[1][0] == "~":
                             new_path = user_command[1][0].replace("~",os.environ.get("HOME"))
+
 
                     os.chdir(new_path)
 
