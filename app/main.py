@@ -16,7 +16,7 @@ def main():
     while True:
 
         sys.stdout.write("$ ")
-        # Wait for user input
+        # Wait for user's input
         global user_input
         user_input = input()
         paths = PATH.split(":")
@@ -55,11 +55,11 @@ def main():
 
     #for echo command
             elif user_command[0] == "echo":
-                if not ">" in user_command and not "1>" in user_command and not "2>" in user_command:
+                if not ">" in user_command and not "1>" in user_command and not "2>" in user_command: # for when not redirecting
                     output = " ".join(user_command[1:])
-                    output = f"{output}\n"
+                    output = f"{output}"
                     redirecting(output,error)
-                else:
+                else: # when redirecting
                     output = f"{user_command[1]}\n"
                     redirecting(output,error)
 
@@ -76,14 +76,21 @@ def main():
                             command_path = f"{path}/{command}"
 
                     if len(user_command) != 2:
-                        error = "type requires one argument, command\n"
+                        error = "type requires only one argument, command"
+                        output = None
                     elif command in built_in_commands:
-                        output = f"{command} is a shell builtin\n"
+                        output = f"{command} is a shell builtin"
                     elif command_path:
-                        output = f"{command} is {command_path}\n"
+                        output = f"{command} is {command_path}"
                     else:
-                        error = f"{command}: not found\n"
+                        error = f"{command}: not found"
+                        output = None
                     redirecting(output,error)
+                else:
+                    error = "type requires one argument, command"
+                    output = None
+                    redirecting(output,error)
+
 
     #for pwd command
             elif user_command[0] == "pwd":
@@ -103,6 +110,12 @@ def main():
                     error = result.stderr
                     redirecting(output,error)
 
+                if "2>" in user_input:
+                    new_user_command = user_command[0:user_command.index("2>")]
+                    result = subprocess.run(new_user_command, capture_output=True, text=True)
+                    output = result.stdout
+                    error = result.stderr
+                    redirecting(output,error)
 
                 elif ">" in user_input:
                     new_user_command = user_command[0:user_command.index(">")]
@@ -143,7 +156,8 @@ def main():
 
                     else:
                         error = f"{user_command[0]} requires one argument, directory\n"
-                    redirecting(output,error)
+                    redirecting(output = None,error = error)
+
 
                 except FileNotFoundError:
                     sys.stdout.write(f"cd: {user_command[1]}: No such file or directory\n")
@@ -171,15 +185,15 @@ def executable_file(command: str):
 
 def redirecting(output,error):
 
-    if "1>" in user_input:
+#for redirecting stdout
+    if "1>" in user_command:
+
         if os.path.isfile(user_command[user_command.index("1>") + 1]):
             with open(user_command[user_command.index("1>") + 1], "a") as file:
                 if output:
                     file.write(output)
                 elif error:
                     file.write(error)
-
-
 
         elif not os.path.isfile(user_command[user_command.index("1>") - 1]) and user_command[0] != "echo":
             sys.stdout.write(f"{user_command[0]}: {user_command[user_command.index('1>') - 1]}: No such file or directory\n")
@@ -188,7 +202,7 @@ def redirecting(output,error):
                 touch_cmd = ["touch", user_command[user_command.index("1>") + 1]]
                 subprocess.run(touch_cmd)
                 with open(user_command[user_command.index("1>") + 1], "a") as file:
-                    if output:
+                    if output is not None:
                         file.write(output)
                     elif error:
                         file.write(output)
@@ -202,11 +216,48 @@ def redirecting(output,error):
                 elif error:
                     file.write(error)
 
-    elif "2>" in user_input:
-        if os.path.isfile(user_command[user_command.index("2>") + 1]):
-            with open(user_command[user_command.index("2>") + 1],"a") as file:
-                file.write(error)
+#for redirecting stderr
+    elif "2>" in user_command:
 
+        if os.path.isfile(user_command[user_command.index("2>") + 1]):
+            with open(user_command[user_command.index("2>") + 1], "a") as file:
+                if error:
+                    file.write(error)
+                elif output:
+                    sys.stdout.write(output)
+
+        elif not os.path.isfile(user_command[user_command.index("2>") - 1]) and user_command[0] != "echo":
+            error = f"{user_command[0]}: {user_command[user_command.index('2>') - 1]}: No such file or directory\n"
+
+            if not os.path.isfile(user_command[user_command.index("2>") + 1]):
+                touch_cmd = ["touch",user_command[user_command.index("2>") + 1]]
+                subprocess.run(touch_cmd)
+                with open(user_command[user_command.index("2>") + 1], "a") as file:
+                    if error is not None:
+                        file.write(error)
+                    elif output:
+                        sys.stdout.write(output)
+
+            '''if os.path.isfile(user_command[user_command.index("2>") - 2]) and not os.path.isfile(user_command[user_command.index("2>") + 1]):
+                touch_cmd = ["touch", user_command[user_command.index("2>") + 1]]
+                subprocess.run(touch_cmd)
+                with open(user_command[user_command.index("2>") + 1], "a") as file:
+                    if error is not None:
+                        file.write(error)
+                    elif output:
+                        file.write(output)'''
+
+
+        else:
+            touch_cmd = ["touch", user_command[user_command.index("2>") + 1]]
+            subprocess.run(touch_cmd)
+            with open(user_command[user_command.index("2>") + 1], "a") as file:
+                if error:
+                    file.write(error)
+                elif output:
+                    sys.stdout.write(output)
+
+#for redirecting stdout
     elif ">" in user_input:
         if os.path.isfile(user_command[user_command.index(">") + 1]):
             with open(user_command[user_command.index(">") + 1],"a") as file:
@@ -224,7 +275,9 @@ def redirecting(output,error):
                     file.write(error)
 
     else:
-        sys.stdout.write(f"{output}\n")
-
+        if output is not None:
+            sys.stdout.write(f"{output}\n")
+        elif error is not None:
+            sys.stdout.write(f"{error}\n")
 if __name__ == "__main__":
     main()
