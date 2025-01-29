@@ -110,7 +110,7 @@ def main():
                     error = result.stderr
                     redirecting(output,error)
 
-                if "2>" in user_input:
+                elif "2>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
@@ -235,6 +235,7 @@ def redirecting(output,error):
                 with open(user_command[user_command.index("2>") + 1], "a") as file:
                     if error is not None:
                         file.write(error)
+                        sys.stdout.write(output)
                     elif output:
                         sys.stdout.write(output)
 
