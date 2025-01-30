@@ -1,12 +1,14 @@
-import os  # alot of stuff!
-import sys  # for output , exit and other such stuff
-from os.path import abspath  # to find the absolute path i.e. path from the home directory
-import subprocess  # to run the executable files
-import platform  # to check the for the current platform
-import shlex  # to handle the quotes in the command line
+import os # alot of stuff!
+import sys # for output , exit and other such stuff
+from os.path import abspath # to find the absolute path i.e. path from the home directory
+import subprocess # to run the executable files
+import platform #to check the for the current platform
+import shlex #to handle the quotes in the command line
+import readline #to use for autocompletion
 
-built_in_commands = ["exit", "echo", "type", "pwd", "cd"]
-PATH = os.environ["PATH"]  # makes a list of all the paths of the current environment
+
+built_in_commands = ["exit", "echo","type","pwd","cd"]
+PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
 user_input = ""
 user_command = []
 
@@ -14,30 +16,35 @@ user_command = []
 def main():
     while True:
 
+        readline.set_completer(auto_completer)
+        readline.parse_and_bind("tab: complete")
         sys.stdout.write("$ ")
         # Wait for user's input
         global user_input
         user_input = input()
         paths = PATH.split(":")
         global user_command
-        user_command = shlex.split(user_input, posix=True)
+        user_command = shlex.split(user_input,posix=True)
         output = ""
         error = ""
 
-        # TODO make it so that the program can catch the unterminated quotes
-        #   if user_input_ls.count("'") == 0 and user_input_ls.count('"') == 0: #find a better a way to handle quotes through regex
-        #      user_command = user_input.split()
 
-        # elif user_input_ls.count("'")%2 != 0 or user_input_ls.count('"')%2 != 0:
-        #   sys.stdout("Unterminated single quote\n")
+# TODO make it so that the program can catch the unterminated quotes
+     #   if user_input_ls.count("'") == 0 and user_input_ls.count('"') == 0: #find a better a way to handle quotes through regex
+      #      user_command = user_input.split()
 
-        # elif user_input_ls.count("'")%2 == 0 or user_input_ls.count('"')%2 == 0:
+        #elif user_input_ls.count("'")%2 != 0 or user_input_ls.count('"')%2 != 0:
+         #   sys.stdout("Unterminated single quote\n")
+
+       # elif user_input_ls.count("'")%2 == 0 or user_input_ls.count('"')%2 == 0:
         #    user_command = shlex.split(user_input,posix=True)
+
+
 
         if user_input == "":
             pass
         else:
-            # for exit command
+    #for exit command
             if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
                 try:
                     sys.exit(int(user_command[1]))
@@ -48,18 +55,18 @@ def main():
                 sys.stdout.write(f"{user_command[0]} requires one argument, exit code.\n")
 
 
-            # for echo command
+    #for echo command
             elif user_command[0] == "echo":
-                if not ">" in user_command and not "1>" in user_command and not "2>" in user_command and not ">>" in user_command and not "1>>" in user_command and not "2>>" in user_command:  # for when not redirecting
+                if not ">" in user_command and not "1>" in user_command and not "2>" in user_command and not ">>" in user_command and not "1>>" in user_command and not "2>>" in user_command: # for when not redirecting
                     output = " ".join(user_command[1:])
                     output = f"{output}"
-                    redirecting(output, error)
-                else:  # when redirecting
+                    redirecting(output,error)
+                else: # when redirecting
                     output = f"{user_command[1]}\n"
-                    redirecting(output, error)
+                    redirecting(output,error)
 
 
-            # for type command
+    #for type command
             elif user_command[0] == "type":
 
                 if len(user_command) != 1:
@@ -80,65 +87,66 @@ def main():
                     else:
                         error = f"{command}: not found"
                         output = None
-                    redirecting(output, error)
+                    redirecting(output,error)
                 else:
                     error = "type requires one argument, command"
                     output = None
-                    redirecting(output, error)
+                    redirecting(output,error)
 
 
-            # for pwd command
+    #for pwd command
             elif user_command[0] == "pwd":
                 output = f"{abspath(os.getcwd())}"
-                redirecting(output, error)
+                redirecting(output,error)
 
-            # for executing commands through the shell
+    #for executing commands through the shell
             elif executable_file(user_command[0]):
                 result = subprocess.run(user_command, capture_output=True, text=True)
                 output = result.stdout
                 error = result.stderr
+
 
                 if "1>>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output, error)
+                    redirecting(output,error)
 
                 elif "2>>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output, error)
+                    redirecting(output,error)
 
                 elif ">>" in user_input:
                     new_user_command = user_command[0:user_command.index(">>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output, error)
+                    redirecting(output,error)
 
                 elif "1>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output, error)
+                    redirecting(output,error)
 
                 elif "2>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output, error)
+                    redirecting(output,error)
 
 
                 elif ">" in user_input:
                     new_user_command = user_command[0:user_command.index(">")]
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
-                    redirecting(output, error)
+                    redirecting(output,error)
 
                 else:
                     result = subprocess.run(user_command, capture_output=True, text=True)
@@ -146,17 +154,18 @@ def main():
                     sys.stdout.write(result.stderr)
 
 
-            # for cd command
+    #for cd command
             elif user_command[0] == "cd":
                 try:
                     new_path = user_command[1]
                     if platform.system() == "Windows":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1].replace("~", os.environ.get("USERPROFILE"))
+                            new_path = user_command[1].replace("~",os.environ.get("USERPROFILE"))
 
                     elif platform.system() == "Linux":
                         if user_command[1][0] == "~":
-                            new_path = user_command[1].replace("~", os.environ.get("HOME"))
+                            new_path = user_command[1].replace("~",os.environ.get("HOME"))
+
 
                     os.chdir(new_path)
 
@@ -172,7 +181,7 @@ def main():
 
                     else:
                         error = f"{user_command[0]} requires one argument, directory\n"
-                    redirecting(output=None, error=error)
+                    redirecting(output = None,error = error)
 
 
                 except FileNotFoundError:
@@ -183,7 +192,6 @@ def main():
                 sys.stdout.write(f"{user_command[0]}: command not found\n")
                 sys.stdout.flush()
 
-
 '''
 def exit(user_command: list):
     if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
@@ -192,18 +200,16 @@ def exit(user_command: list):
     elif user_command[0] == "exit" and len(user_command) != 2:
         print(f"{user_command[0]} requires one argument, exit code.")'''
 
-
-# checks if the file is an executable program
+#checks if the file is an executable program
 def executable_file(command: str):
     paths = PATH.split(":")
     for path in paths:
         if os.path.isfile(f"{path}/{command}"):
             return True
 
-
 # redirects the output to another file
-def redirecting(output, error):
-    # TODO make this function more modular and less repetitive
+def redirecting(output,error):
+# TODO make this function more modular and less repetitive
     if "1>>" in user_command:
 
         if os.path.isfile(user_command[user_command.index("1>>") + 1]):
@@ -216,11 +222,11 @@ def redirecting(output, error):
         elif not os.path.isfile(user_command[user_command.index("1>>") - 1]) and user_command[0] != "echo":
             error = f"{user_command[0]}: {user_command[user_command.index('1>>') - 1]}: No such file or directory\n"
 
-            if os.path.isfile(user_command[1]) and not os.path.isfile(user_command[user_command.index("1>>") + 1]):
+            if os.path.isfile(user_command[1]) and not os.path.isfile(user_command[user_command.index("1>>")+1 ]):
                 touch_cmd = ["touch", user_command[user_command.index("1>>") + 1]]
                 subprocess.run(touch_cmd)
                 with open(user_command[user_command.index("1>>") + 1], "a") as file:
-                    if output is not None and output != "":
+                    if output is not None and output != "" :
                         file.write(output)
                     elif error:
                         file.write(output)
@@ -289,8 +295,7 @@ def redirecting(output, error):
         elif not os.path.isfile(user_command[user_command.index(">>") - 1]) and user_command[0] != "echo":
             error = f"{user_command[0]}: {user_command[user_command.index('>>') - 1]}: No such file or directory\n"
 
-            if os.path.exists(user_command[user_command.index(">>") - 1]) and not os.path.isfile(
-                    user_command[user_command.index(">>") + 1]):
+            if os.path.exists(user_command[user_command.index(">>") - 1]) and not os.path.isfile(user_command[user_command.index(">>")+1 ]):
 
                 subprocess.run(touch_cmd)
                 with open(user_command[user_command.index(">>") + 1], "a") as file:
@@ -300,8 +305,7 @@ def redirecting(output, error):
                         file.write(output)
             else:
                 subprocess.run(touch_cmd)
-                sys.stdout.write(
-                    f"{user_command[0]}: {user_command[user_command.index('>>') - 1]}: No such file or directory\n")
+                sys.stdout.write(f"{user_command[0]}: {user_command[user_command.index('>>') - 1]}: No such file or directory\n")
 
         else:
             subprocess.run(touch_cmd)
@@ -387,18 +391,18 @@ def redirecting(output, error):
 
 
 
-    # for redirecting stdout
+    #for redirecting stdout
     elif ">" in user_input:
         if os.path.isfile(user_command[user_command.index(">") + 1]):
-            with open(user_command[user_command.index(">") + 1], "a") as file:
+            with open(user_command[user_command.index(">") + 1],"a") as file:
                 if output:
                     file.write(output)
                 elif error:
                     file.write(error)
         else:
-            touch_cmd = ["touch", user_command[user_command.index(">") + 1]]
+            touch_cmd = ["touch",user_command[user_command.index(">") + 1]]
             subprocess.run(touch_cmd)
-            with open(user_command[user_command.index(">") + 1], "a") as file:
+            with open(user_command[user_command.index(">") + 1],"a") as file:
                 if output:
                     file.write(output)
                 elif error:
@@ -409,6 +413,19 @@ def redirecting(output, error):
             sys.stdout.write(f"{output}\n")
         elif error is not None:
             sys.stdout.write(f"{error}\n")
+
+
+#autocompletes built-in commands
+def auto_completer(text,state):
+    matches = [match for match in built_in_commands if match.startswith(text)]
+
+    if len(matches) > state:
+        
+        return f"{matches[state]} "
+    
+    else:
+        return None
+    
 
 
 if __name__ == "__main__":
