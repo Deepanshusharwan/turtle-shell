@@ -15,13 +15,12 @@ user_command = []
 
 def main():
     while True:
-
+        text_parse_bind()
         readline.set_completer(auto_completer)
         readline.parse_and_bind("tab: complete")
-        sys.stdout.write("$ ")
         # Wait for user's input
         global user_input
-        user_input = input()
+        user_input = input("$ ")
         paths = PATH.split(":")
         global user_command
         user_command = shlex.split(user_input,posix=True)
@@ -420,12 +419,22 @@ def auto_completer(text,state):
     matches = [match for match in built_in_commands if match.startswith(text)]
 
     if len(matches) > state:
-        
         return f"{matches[state]} "
     
     else:
         return None
     
+
+def text_parse_bind():
+    readline.parse_and_bind("tab: complete")
+    readline.parse_and_bind(r"'\C-a': beginning-of-line")
+    readline.parse_and_bind(r"'\C-e': end-of-line")
+    readline.parse_and_bind(r"'\C-r': reverse-search-history")
+    readline.parse_and_bind(r"'\M-b': backward-word")
+    readline.parse_and_bind(r"'\M-f': forward-word")
+    readline.parse_and_bind(r"'\C-u': unix-line-discard")
+
+
 
 
 if __name__ == "__main__":
