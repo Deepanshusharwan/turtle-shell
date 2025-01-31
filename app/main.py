@@ -11,7 +11,16 @@ built_in_commands = ["exit", "echo","type","pwd","cd"]
 PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
 user_input = ""
 user_command = []
-
+paths = PATH.split(":")
+executable_commands = []
+for path in paths:
+    try:
+        for filename in os.listdir(path):
+            fullpath = os.path.join(path, filename)
+            if os.access(fullpath, os.X_OK):
+                executable_commands.append(filename)
+    except FileNotFoundError:
+        pass
 
 def main():
     while True:
@@ -20,7 +29,7 @@ def main():
         readline.parse_and_bind("tab: complete")
         # Wait for user's input
         global user_input
-        user_input = input("$ ")
+        user_input = input("$ ")#removed the command sys.stdout.write("$ ") and instead put the prompt inside the input command..revert if it causes issues
         paths = PATH.split(":")
         global user_command
         user_command = shlex.split(user_input,posix=True)
@@ -417,13 +426,20 @@ def redirecting(output,error):
 #autocompletes built-in commands
 def auto_completer(text,state):
     matches = [match for match in built_in_commands if match.startswith(text)]
+    matches_exec_cmd = [cmd for cmd in executable_commands if cmd.startswith(text)]
+    for s in matches_exec_cmd:
+        matches.append(s)
+    matches.sort()
 
-    if len(matches) > state:
-        return f"{matches[state]} "
-    
+    if len(matches) > state: #TODO check why ech <TAB> gives "echo" instead of "echo "
+
+        if len(matches) == 1 or matches[state] == text or matches[state] in built_in_commands:
+            return f"{matches[state]} "
+        else:
+            return f"{matches[state]}"
     else:
         return None
-    
+
 
 def text_parse_bind():
     readline.parse_and_bind("tab: complete")
@@ -433,7 +449,7 @@ def text_parse_bind():
     readline.parse_and_bind(r"'\M-b': backward-word")
     readline.parse_and_bind(r"'\M-f': forward-word")
     readline.parse_and_bind(r"'\C-u': unix-line-discard")
-
+#TODO add more keybindings and make a seperate file so users can bind keys on their own
 
 
 
