@@ -93,6 +93,7 @@ Some executable external commands are:
 * Edit
 * git
 * ls
+* lazygit
 
 # Error Handling
 * Invalid commands output:
