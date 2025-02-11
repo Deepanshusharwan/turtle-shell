@@ -3,7 +3,6 @@
 This project implements a basic command-line shell in Python, providing functionality for built-in commands, directory navigation, and external executable execution. It is cross-platform, supporting Linux and Windows.
 
 ---
-
 ``` 
 ________             ___________                  ______      ___________                 
 ___  __/___  __________  /___  /____       __________  /_________  /__  /                 
