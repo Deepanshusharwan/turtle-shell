@@ -4,8 +4,14 @@ This project implements a basic command-line shell in Python, providing function
 
 ---
 
+``` 
+________             ___________                  ______      ___________                 
+___  __/___  __________  /___  /____       __________  /_________  /__  /                 
+__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /                  
+_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /                   
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/                    
+```
 ## Features
-
 - **Built-in Commands**:
   - `exit [code]`: Exits the shell with the provided exit code.
   - `echo [text]`: Prints the specified text to the console.

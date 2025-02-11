@@ -30,7 +30,7 @@ def main():
         # Wait for user's input
         global user_input
         user_input = input("$ ")#removed the command sys.stdout.write("$ ") and instead put the prompt inside the input command..revert if it causes issues
-        paths = PATH.split(":")
+
         global user_command
         user_command = shlex.split(user_input,posix=True)
         output = ""
@@ -449,7 +449,7 @@ def text_parse_bind():
     readline.parse_and_bind(r"'\M-b': backward-word")
     readline.parse_and_bind(r"'\M-f': forward-word")
     readline.parse_and_bind(r"'\C-u': unix-line-discard")
-#TODO add more keybindings and make a seperate file so users can bind keys on their own
+#TODO add more keybindings and make a separate file so users can bind keys on their own
 
 
 
