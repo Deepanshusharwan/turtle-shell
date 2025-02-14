@@ -6,7 +6,12 @@ import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 import readline #to use for autocompletion
 
-
+version_info = """
+version: 0.1.2
+release date: 14/02/2025
+build date: 12/02/2025
+build: beta
+"""
 built_in_commands = ["exit", "echo","type","pwd","cd"]
 PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
 user_input = ""
@@ -74,6 +79,14 @@ def main():
                     redirecting(output,error)
 
 
+            elif user_command[0] == "turtle":
+                print(r"""
+________             _____ _____                  ______      ___________
+___  __/___  __________  /__/  /____       __________  /_________  /__  /
+__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
+_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
+                print(version_info)
     #for type command
             elif user_command[0] == "type":
 

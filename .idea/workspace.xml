@@ -25,6 +25,11 @@
     &quot;accountId&quot;: &quot;995c9913-2cdf-49dc-abe5-f612f5edad09&quot;
   }
 }</component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -79,7 +84,7 @@
       <workItem from="1738952751834" duration="38000" />
       <workItem from="1738952864548" duration="198000" />
       <workItem from="1738995972225" duration="848000" />
-      <workItem from="1739264510115" duration="337000" />
+      <workItem from="1739264510115" duration="627000" />
     </task>
     <servers />
   </component>
