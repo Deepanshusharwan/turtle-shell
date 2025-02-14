@@ -5,13 +5,11 @@ import subprocess # to run the executable files
 import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 import readline #to use for autocompletion
-PROJECT_DIR = abspath(os.getcwd())    # this and the next few lines add the .config folder to the sys.path of python (the path that python scans for packages) don't forget to add __init__ so python can recognize that folder as a python package no need to add anything in the init file
+PROJECT_DIR = abspath(os.path.join(os.getcwd(),sys.argv[0].removesuffix("main.py")))    # this and the next few lines add the .config folder to the sys.path of python (the path that python scans for packages) don't forget to add __init__ so python can recognize that folder as a python package no need to add anything in the init file
 CONFIG_PATH = os.path.join(PROJECT_DIR, '.config')
 sys.path.append(CONFIG_PATH)
-something = sys.path
-import keybindings
+something = sys.path #sys.path is the place where the python searches for modules to import
 from keybindings import text_parse_bind
-
 
 version_info = """
 version: 0.1.7
@@ -436,9 +434,9 @@ def auto_completer(text,state):
 
 def write_history():
     if platform.system() == "Windows":
-        history_path = user_command[1].replace("~",os.environ.get("USERPROFILE"))
+        history_path = os.environ.get("USERPROFILE")
     elif platform.system() == "Linux":
-        history_path = user_command[1].replace("~",os.environ.get("HOME"))
+        history_path = os.environ.get("HOME")
 
     if not os.path.isfile(f"{history_path}/.turtle_history"):
         subprocess.run(["touch",f"{history_path}/.turtle_history"])
