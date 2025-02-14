@@ -14,7 +14,7 @@ from keybindings import text_parse_bind
 
 
 version_info = """
-version: 0.1.6
+version: 0.1.7
 release date: 14/02/2025
 build date: 12/02/2025
 build: beta
@@ -199,13 +199,7 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
                 sys.stdout.write(f"{user_command[0]}: command not found\n")
                 sys.stdout.flush()
 
-'''
-def exit(user_command: list):
-    if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
-        sys.exit(int(user_command[1]))
-
-    elif user_command[0] == "exit" and len(user_command) != 2:
-        print(f"{user_command[0]} requires one argument, exit code.")'''
+        write_history()
 
 #checks if the file is an executable program
 def executable_file(command: str):
@@ -440,6 +434,18 @@ def auto_completer(text,state):
         return None
 
 
+def write_history():
+    if platform.system() == "Windows":
+        history_path = user_command[1].replace("~",os.environ.get("USERPROFILE"))
+    elif platform.system() == "Linux":
+        history_path = user_command[1].replace("~",os.environ.get("HOME"))
+
+    if not os.path.isfile(f"{history_path}/.turtle_history"):
+        subprocess.run(["touch",f"{history_path}/.turtle_history"])
+
+    with open(f"{history_path}/.turtle_history","a") as file:
+        file.write(user_input)
+        file.write("\n")
 
 
 if __name__ == "__main__":
