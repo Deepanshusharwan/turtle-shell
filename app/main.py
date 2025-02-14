@@ -135,50 +135,26 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
                 result = subprocess.run(user_command, capture_output=True, text=True)
                 output = result.stdout
                 error = result.stderr
-
+                new_user_command = ''
 
                 if "1>>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "2>>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif ">>" in user_input:
                     new_user_command = user_command[0:user_command.index(">>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "1>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "2>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>")]
+                elif ">" in user_input:
+                    new_user_command = user_command[0:user_command.index(">")]
+
+                if new_user_command != '':
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output,error)
-
-
-                elif ">" in user_input:
-                    new_user_command = user_command[0:user_command.index(">")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    redirecting(output,error)
-
+                    redirecting(output, error)
                 else:
                     result = subprocess.run(user_command, capture_output=True, text=True)
                     sys.stdout.write(result.stdout)
