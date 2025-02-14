@@ -12,7 +12,7 @@ something = sys.path #sys.path is the place where the python searches for module
 from keybindings import text_parse_bind
 
 version_info = """
-version: 0.1.7
+version: 0.1.9
 release date: 14/02/2025
 build date: 12/02/2025
 build: beta
@@ -36,6 +36,13 @@ for path in paths:
         pass
 
 def main():
+    print(r"""
+    ________             _____ _____                  ______      ___________
+    ___  __/___  __________  /__/  /____       __________  /_________  /__  /
+    __  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
+    _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
+    /_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
+    print(version_info)
     while True:
         text_parse_bind()
         readline.set_completer(auto_completer)
