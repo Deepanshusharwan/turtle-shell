@@ -5,7 +5,7 @@ import subprocess # to run the executable files
 import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 import readline #to use for autocompletion
-PROJECT_DIR = abspath(os.getcwd())    # this and the next line
+PROJECT_DIR = abspath(os.getcwd())    # this and the next few lines add the .config folder to the sys.path of python (the path that python scans for packages) don't forget to add __init__ so python can recognize that folder as a python package no need to add anything in the init file
 CONFIG_PATH = os.path.join(PROJECT_DIR, '.config')
 sys.path.append(CONFIG_PATH)
 something = sys.path
@@ -14,7 +14,7 @@ from keybindings import text_parse_bind
 
 
 version_info = """
-version: 0.1.5
+version: 0.1.6
 release date: 14/02/2025
 build date: 12/02/2025
 build: beta
