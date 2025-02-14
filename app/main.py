@@ -13,8 +13,8 @@ from keybindings import text_parse_bind
 
 version_info = """
 version: 0.1.9
-release date: 14/02/2025
-build date: 12/02/2025
+release date: 15/02/2025
+build date: 14/02/2025
 build: beta
 """
 built_in_commands = ["exit", "echo","type","pwd","cd"]
@@ -37,11 +37,11 @@ for path in paths:
 
 def main():
     print(r"""
-    ________             _____ _____                  ______      ___________
-    ___  __/___  __________  /__/  /____       __________  /_________  /__  /
-    __  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
-    _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
-    /_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
+________             _____ _____                  ______      ___________
+___  __/___  __________  /__/  /____       __________  /_________  /__  /
+__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
+_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
     print(version_info)
     while True:
         text_parse_bind()
@@ -444,6 +444,8 @@ def write_history():
         history_path = os.environ.get("USERPROFILE")
     elif platform.system() == "Linux":
         history_path = os.environ.get("HOME")
+    else:
+        history_path = abspath(sys.argv[0])
 
     if not os.path.isfile(f"{history_path}/.turtle_history"):
         subprocess.run(["touch",f"{history_path}/.turtle_history"])
