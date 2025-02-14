@@ -5,9 +5,16 @@ import subprocess # to run the executable files
 import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 import readline #to use for autocompletion
+PROJECT_DIR = abspath(os.getcwd())    # this and the next line
+CONFIG_PATH = os.path.join(PROJECT_DIR, '.config')
+sys.path.append(CONFIG_PATH)
+something = sys.path
+import keybindings
+from keybindings import text_parse_bind
+
 
 version_info = """
-version: 0.1.2
+version: 0.1.5
 release date: 14/02/2025
 build date: 12/02/2025
 build: beta
@@ -18,12 +25,15 @@ user_input = ""
 user_command = []
 paths = PATH.split(":")
 executable_commands = []
+unexecutable_commands = []
 for path in paths:
     try:
         for filename in os.listdir(path):
             fullpath = os.path.join(path, filename)
             if os.access(fullpath, os.X_OK):
                 executable_commands.append(filename)
+            else:
+                unexecutable_commands.append(filename)
     except FileNotFoundError:
         pass
 
@@ -34,7 +44,7 @@ def main():
         readline.parse_and_bind("tab: complete")
         # Wait for user's input
         global user_input
-        user_input = input("$ ")#removed the command sys.stdout.write("$ ") and instead put the prompt inside the input command..revert if it causes issues
+        user_input = input("$ ")
 
         global user_command
         user_command = shlex.split(user_input,posix=True)
@@ -444,7 +454,7 @@ def auto_completer(text,state):
         matches.append(s)
     matches.sort()
 
-    if len(matches) > state: #TODO check why ech <TAB> gives "echo" instead of "echo "
+    if len(matches) > state:
 
         if len(matches) == 1 or matches[state] == text or matches[state] in built_in_commands:
             return f"{matches[state]} "
@@ -453,16 +463,6 @@ def auto_completer(text,state):
     else:
         return None
 
-
-def text_parse_bind():
-    readline.parse_and_bind("tab: complete")
-    readline.parse_and_bind(r"'\C-a': beginning-of-line")
-    readline.parse_and_bind(r"'\C-e': end-of-line")
-    readline.parse_and_bind(r"'\C-r': reverse-search-history")
-    readline.parse_and_bind(r"'\M-b': backward-word")
-    readline.parse_and_bind(r"'\M-f': forward-word")
-    readline.parse_and_bind(r"'\C-u': unix-line-discard")
-#TODO add more keybindings and make a separate file so users can bind keys on their own
 
 
 
