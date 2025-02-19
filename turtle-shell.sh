@@ -9,4 +9,7 @@ set -e # Exit early if any commands fail
 #
 # - Edit this to change how your program runs locally
 # - Edit .bash_scripts/run.sh to change how your program runs remotely
-exec pipenv run python3 -u -m app.main "$@"
+exec python -m venv turtle-venv
+exec source turtle-venv/bin/activate
+exec pip -r requirement.txt
+exec python app/main.py
