@@ -11,19 +11,22 @@ sys.path.append(CONFIG_PATH)
 something = sys.path #sys.path is the place where the python searches for modules to import
 from keybindings import text_parse_bind
 
+
 version_info = """
-version: 0.1.10
-release date: 15/02/2025
-build date: 14/02/2025
+version: 0.1.11
+release date: 20/02/2025
+build date: 19/02/2025
 build: beta
 """
-built_in_commands = ["exit", "echo","type","pwd","cd"]
+built_in_commands = ["exit", "echo","type","pwd","cd","turtle"]
 PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
 user_input = ""
 user_command = []
 paths = PATH.split(":")
 executable_commands = []
 unexecutable_commands = []
+platform = platform.system()
+
 for path in paths:
     try:
         for filename in os.listdir(path):
@@ -35,6 +38,7 @@ for path in paths:
     except FileNotFoundError:
         pass
 
+
 def main():
     print(r"""
 ________             _____ _____                  ______      ___________
@@ -43,6 +47,7 @@ __  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
 _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
 /_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
     print(version_info)
+
     while True:
         text_parse_bind()
         readline.set_completer(auto_completer)
@@ -95,13 +100,19 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
 
 
             elif user_command[0] == "turtle":
-                print(r"""
+                if len(user_command) == 1:
+                    error = "Please give an additional argument"
+                elif user_command[1] == "-v" or user_command[1] == "-V":
+                    output = r"""
 ________             _____ _____                  ______      ___________
 ___  __/___  __________  /__/  /____       __________  /_________  /__  /
 __  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
 _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
-/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
-                print(version_info)
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/"""
+
+                    output = output + f"\n{version_info}"
+
+                redirecting(output,error)
     #for type command
             elif user_command[0] == "type":
 
@@ -170,11 +181,11 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
             elif user_command[0] == "cd":
                 try:
                     new_path = user_command[1]
-                    if platform.system() == "Windows":
+                    if platform == "Windows":
                         if user_command[1][0] == "~":
                             new_path = user_command[1].replace("~",os.environ.get("USERPROFILE"))
 
-                    elif platform.system() == "Linux":
+                    elif platform == "Linux":
                         if user_command[1][0] == "~":
                             new_path = user_command[1].replace("~",os.environ.get("HOME"))
 
@@ -183,11 +194,11 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
 
                 except IndexError:
                     if len(user_command) == 1:
-                        if platform.system() == "Windows":
+                        if platform == "Windows":
                             new_path = os.environ.get("USERPROFILE")
                             os.chdir(new_path)
 
-                        elif platform.system() == "Linux":
+                        elif platform == "Linux":
                             new_path = os.environ.get("HOME")
                             os.chdir(new_path)
 
@@ -210,7 +221,7 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
 def executable_file(command: str):
     paths = PATH.split(":")
     for path in paths:
-        if os.path.isfile(f"{path}/{command}"):
+        if os.path.isfile(f"{path}/{command}") or command in executable_commands:
             return True
 
 # redirects the output to another file
@@ -440,9 +451,9 @@ def auto_completer(text,state):
 
 
 def write_history():
-    if platform.system() == "Windows":
+    if platform == "Windows":
         history_path = os.environ.get("USERPROFILE")
-    elif platform.system() == "Linux":
+    elif platform == "Linux":
         history_path = os.environ.get("HOME")
     else:
         history_path = abspath(sys.argv[0])

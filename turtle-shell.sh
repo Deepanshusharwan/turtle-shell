@@ -5,12 +5,23 @@
 
 set -e # Exit early if any commands fail
 
-# Copied from .bash_scripts/run.sh
 #
 # - Edit this to change how your program runs locally
 # - Edit .bash_scripts/run.sh to change how your program runs remotely
-exec python -m venv turtle-venv
-exec source turtle-venv/bin/activate
-exec pip install --upgrade pip
-exec pip install -r requirement.txt
+python -m venv turtle-venv
+echo _____________________________________________________________________
+echo virtual enviroment setup named "turtle-venv"
+echo _____________________________________________________________________
+. turtle-venv/bin/activate
+echo _____________________________________________________________________
+echo virtual enviroment activated
+echo _____________________________________________________________________
+pip install --upgrade pip
+echo _____________________________________________________________________
+echo pip upgraded
+echo _____________________________________________________________________
+pip install -r requirement.txt
+echo _____________________________________________________________________
+echo dependancies installed....running the program now
+echo _____________________________________________________________________
 exec python app/main.py

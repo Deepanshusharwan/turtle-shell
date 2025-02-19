@@ -1,7 +1,1 @@
 readline
-os
-sys
-subprocess
-shlex
-platform
-sys
