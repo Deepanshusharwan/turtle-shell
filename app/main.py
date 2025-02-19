@@ -12,7 +12,7 @@ something = sys.path #sys.path is the place where the python searches for module
 from keybindings import text_parse_bind
 
 version_info = """
-version: 0.1.9
+version: 0.1.10
 release date: 15/02/2025
 build date: 14/02/2025
 build: beta
