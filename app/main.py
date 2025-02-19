@@ -5,18 +5,16 @@ import subprocess # to run the executable files
 import platform #to check the for the current platform
 import shlex #to handle the quotes in the command line
 import readline #to use for autocompletion
-PROJECT_DIR = abspath(os.getcwd())    # this and the next few lines add the .config folder to the sys.path of python (the path that python scans for packages) don't forget to add __init__ so python can recognize that folder as a python package no need to add anything in the init file
+PROJECT_DIR = abspath(os.path.join(os.getcwd(),sys.argv[0].removesuffix("main.py")))    # this and the next few lines add the .config folder to the sys.path of python (the path that python scans for packages) don't forget to add __init__ so python can recognize that folder as a python package no need to add anything in the init file
 CONFIG_PATH = os.path.join(PROJECT_DIR, '.config')
 sys.path.append(CONFIG_PATH)
-something = sys.path
-import keybindings
+something = sys.path #sys.path is the place where the python searches for modules to import
 from keybindings import text_parse_bind
 
-
 version_info = """
-version: 0.1.6
-release date: 14/02/2025
-build date: 12/02/2025
+version: 0.1.9
+release date: 15/02/2025
+build date: 14/02/2025
 build: beta
 """
 built_in_commands = ["exit", "echo","type","pwd","cd"]
@@ -38,6 +36,13 @@ for path in paths:
         pass
 
 def main():
+    print(r"""
+________             _____ _____                  ______      ___________
+___  __/___  __________  /__/  /____       __________  /_________  /__  /
+__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
+_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/""")
+    print(version_info)
     while True:
         text_parse_bind()
         readline.set_completer(auto_completer)
@@ -135,50 +140,26 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
                 result = subprocess.run(user_command, capture_output=True, text=True)
                 output = result.stdout
                 error = result.stderr
-
+                new_user_command = ''
 
                 if "1>>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "2>>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif ">>" in user_input:
                     new_user_command = user_command[0:user_command.index(">>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "1>" in user_input:
                     new_user_command = user_command[0:user_command.index("1>")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    error = result.stderr
-                    redirecting(output,error)
-
                 elif "2>" in user_input:
                     new_user_command = user_command[0:user_command.index("2>")]
+                elif ">" in user_input:
+                    new_user_command = user_command[0:user_command.index(">")]
+
+                if new_user_command != '':
                     result = subprocess.run(new_user_command, capture_output=True, text=True)
                     output = result.stdout
                     error = result.stderr
-                    redirecting(output,error)
-
-
-                elif ">" in user_input:
-                    new_user_command = user_command[0:user_command.index(">")]
-                    result = subprocess.run(new_user_command, capture_output=True, text=True)
-                    output = result.stdout
-                    redirecting(output,error)
-
+                    redirecting(output, error)
                 else:
                     result = subprocess.run(user_command, capture_output=True, text=True)
                     sys.stdout.write(result.stdout)
@@ -223,13 +204,7 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
                 sys.stdout.write(f"{user_command[0]}: command not found\n")
                 sys.stdout.flush()
 
-'''
-def exit(user_command: list):
-    if user_command[0] == 'exit' and len(user_command) == 2:  # for exit commands
-        sys.exit(int(user_command[1]))
-
-    elif user_command[0] == "exit" and len(user_command) != 2:
-        print(f"{user_command[0]} requires one argument, exit code.")'''
+        write_history()
 
 #checks if the file is an executable program
 def executable_file(command: str):
@@ -464,6 +439,20 @@ def auto_completer(text,state):
         return None
 
 
+def write_history():
+    if platform.system() == "Windows":
+        history_path = os.environ.get("USERPROFILE")
+    elif platform.system() == "Linux":
+        history_path = os.environ.get("HOME")
+    else:
+        history_path = abspath(sys.argv[0])
+
+    if not os.path.isfile(f"{history_path}/.turtle_history"):
+        subprocess.run(["touch",f"{history_path}/.turtle_history"])
+
+    with open(f"{history_path}/.turtle_history","a") as file:
+        file.write(user_input)
+        file.write("\n")
 
 
 if __name__ == "__main__":
