@@ -1,6 +1,6 @@
 import readline
 
-
+#you can add your keybindings in this folder just update the path in main.py if you were to move it
 def text_parse_bind():
     readline.parse_and_bind("tab: complete")
     readline.parse_and_bind(r"'\C-a': beginning-of-line")
