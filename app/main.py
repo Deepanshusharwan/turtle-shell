@@ -16,7 +16,7 @@ version_info = """
 version: 0.1.11
 release date: 20/02/2025
 build date: 19/02/2025
-build: beta
+build: Alpha
 """
 built_in_commands = ["exit", "echo","type","pwd","cd","turtle"]
 PATH = os.environ["PATH"]#makes a list of all the paths of the current environment
