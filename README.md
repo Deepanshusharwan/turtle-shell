@@ -5,11 +5,11 @@
 Turtle-shell is a powerful and flexible command-line shell written in Python. It provides an interactive environment for executing system commands, managing files, and scripting tasks. It also includes built-in commands, command history, autocompletion, output redirection, and error handling for an efficient workflow.
 
 ```
-________             ___________                  ______      ___________                 
-___  __/___  __________  /___  /____       __________  /_________  /__  /                 
-__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /                  
-_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /                   
-/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/                    
+________             ___________                  ______      ___________
+___  __/___  __________  /___  /____       __________  /_________  /__  /
+__  /  _  / / /_  ___/  __/_  /_  _ \________  ___/_  __ \  _ \_  /__  /
+_  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
+/_/    \__,_/ /_/    \__/ /_/  \___/       /____/ /_/ /_/\___//_/  /_/
 ```
 
 ## Features
