@@ -8,9 +8,9 @@ set -e # Exit early if any commands fail
 #
 # - Edit this to change how your program runs locally
 # - Edit .bash_scripts/run.sh to change how your program runs remotely
-python -m venv turtle-venv
+python -m venv .venv
 echo _____________________________________________________________________
-echo virtual enviroment setup named "turtle-venv"
+echo virtual enviroment setup named ".venv"
 echo _____________________________________________________________________
 . turtle-venv/bin/activate
 echo _____________________________________________________________________

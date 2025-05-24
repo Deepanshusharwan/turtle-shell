@@ -22,9 +22,9 @@ from keybindings import text_parse_bind #import the keybindings from app/.config
 
 version_info = """
 version: 0.1.11
-release date: 20/02/2025
-build date: 19/02/2025
-build: Alpha
+release date: 25/05/2025
+build date: 24/05/2025
+build: Beta
 """
 built_in_commands = ["exit", "echo", "type", "pwd", "cd", "turtle"]
 PATH = os.environ["PATH"]  # makes a list of all the paths of the current environment
@@ -138,6 +138,35 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
             elif user_command[0] == "tree":
                 if len(user_command) == 1:
                     print("something")
+
+            # for history command
+            elif user_command[0] == "history":
+                
+                if len(user_command) == 1:
+                    output = ''
+                    for i in range(readline.get_current_history_length()):
+                        if i == readline.get_current_history_length() -1:
+                            output += f"{i+1} {readline.get_history_item(i+1)}"
+                        else:
+                            output += f"{i + 1} {readline.get_history_item(i + 1)}\n"
+                        
+                else:
+                    try:
+                        history_range = int(user_command[1])
+                        for i in range(readline.get_current_history_length()-history_range,readline.get_current_history_length()):
+
+                            if i == readline.get_current_history_length() -1:
+                                output += f"{i+1} {readline.get_history_item(i+1)}"
+                            else:
+                                output += f"{i + 1} {readline.get_history_item(i + 1)}\n"
+                            
+                    except ValueError:
+                        output = None
+                        error = "Please give a the length of the history command in numbers"
+
+                redirecting(output,error)
+
+
 
             # for type command
             elif user_command[0] == "type":
