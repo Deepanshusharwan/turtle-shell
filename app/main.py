@@ -65,7 +65,13 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
         user_input = input("$ ")
 
         global user_command
-        user_command = shlex.split(user_input, posix=True)
+        try:
+            user_command = shlex.split(user_input, posix=True)
+        except ValueError as e:
+            print(f"Input error: {e}!")
+            print("Please close your quotation mark or put them between closed quotes")
+            continue
+            
         output = ""
         error = ""
 
