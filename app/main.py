@@ -172,9 +172,9 @@ _  /   / /_/ /_  /   / /_ _  / /  __//_____/(__  )_  / / /  __/  / _  /
 
             # for executing commands through the shell
             elif executable_file(user_command[0]):
-                result = subprocess.run(user_command, capture_output=True, text=True)
-                output = result.stdout
-                error = result.stderr
+                #result = subprocess.run(user_command, capture_output=True, text=True)
+                #output = result.stdout
+                #error = result.stderr
                 new_user_command = ""
 
                 if "1>>" in user_input:
