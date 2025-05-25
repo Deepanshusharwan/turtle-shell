@@ -21,7 +21,7 @@ from keybindings import text_parse_bind #import the keybindings from app/.config
 
 
 version_info = """
-version: 0.1.11
+version: 0.2.01
 release date: 25/05/2025
 build date: 24/05/2025
 build: Beta
